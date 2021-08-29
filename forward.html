@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>转换工具</title>
+    <link rel="stylesheet" href="./src/bootstrap/css/bootstrap.min.css">
+    <style>
+        textarea { min-height: 400px; }
+        pre { padding: 6px 12px; min-height:400px; }
+        .string { color: #92278f; }
+        .number { color: #25aae2; }
+        .boolean { color: #f0ad4e; }
+        .null { color: #d9534f; }
+        .key { color: #4cae4c; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <form method="POST" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Array | JSON | Urldecode</label>
+                    <textarea name="data" class="form-control" id="input"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success" onclick="parseData('formatJson')">JSON</button>
+                <button type="submit" class="btn btn-info" onclick="parseData('urldecode')">Urldecode</button>
+                <button type="submit" class="btn btn-success" onclick="parseData('toArray')">toArray</button>
+                <button type="submit" class="btn btn-info" onclick="parseData('base64Decode')">base64Decode</button>
+                <button type="submit" class="btn btn-success" onclick="parseData('strtotime')">strtotime</button>
+                <button type="submit" class="btn btn-info" onclick="parseData('date')">date</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">JSON | Array</label>
+                <div class="form-group">
+                    <pre id="show_box" contenteditable="true">
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+</body>
+<script src="./src/axios.min.js"></script>
+<script src="./src/config.js"></script>
+<script>
+
+    var AppApi = window.AppApi;
+    function parseData ( type ) {
+        var input = document.getElementById('input').value;
+
+        var config = {
+            method: 'post',
+            url: AppApi.forward,
+            data: {
+                data: input,
+                type: type
+            },
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                logid: (new Date()).getTime(),
+            },
+        }
+        
+        curl(config, function ( dd ){
+            var content = dd.data;
+            console.log(content);
+            console.log(typeof(content));
+            if (typeof(content) === 'object') {
+                content = syntaxHighlight(content);
+            }
+            document.getElementById('show_box').innerHTML = content;
+        });
+
+    }
+
+    // 发送 CURL 请求
+    function curl ( config , callback ) {
+        axios(config).then(callback).catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    // json 语法高亮
+    function syntaxHighlight( json ) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
+</script>
+</html>

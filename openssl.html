@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>非对称密钥加解密</title>
+    <link rel="stylesheet" href="./src/bootstrap/css/bootstrap.min.css">
+    <style>
+        textarea { min-height: 100px; }
+        pre { padding: 6px 12px; min-height:380px; }
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <h3>非对称密钥加解密</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <form method="POST" onsubmit="return false;">
+                <div class="form-group col-md-12">
+                    <label>填充方式</label>
+                    <select name="padding" class="form-control">
+                        <option value="1">OPENSSL_PKCS1_PADDING</option>
+                        <option value="2">OPENSSL_SSLV23_PADDING</option>
+                        <option value="4">OPENSSL_PKCS1_OAEP_PADDING</option>
+                        <option value="3" target="OPENSSL_NO_PADDING">无填充</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>公钥</label>
+                    <textarea name="public_key" class="form-control"></textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>私钥</label>
+                    <textarea name="private_key" class="form-control"></textarea>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>数据</label>
+                    <textarea name="data" class="form-control"></textarea>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" onclick="parseData('pubEncrypt')" class="btn btn-success">公钥加密</button>
+                    <button type="submit" onclick="parseData('priDecrypt')" class="btn btn-warning">私钥解密</button>
+                    <button type="submit" onclick="parseData('pubDecrypt')" class="btn btn-danger">公钥解密</button>
+                    <button type="submit" onclick="parseData('priEncrypt')" class="btn btn-info">私钥加密</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-12">
+                <label>Base64</label>
+                <div class="form-group">
+                    <textarea name="content" class="form-control" contenteditable="true"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+</body>
+<script src="./src/axios.min.js"></script>
+<script src="./src/config.js"></script>
+<script>
+
+    var AppApi = window.AppApi;
+    function parseData ( method ) {
+        var public = document.getElementsByName('public_key')[0].value;
+        var private = document.getElementsByName('private_key')[0].value;
+        var padding = document.getElementsByName('padding')[0].value;
+        var data = document.getElementsByName('data')[0].value;
+
+        var config = {
+            method: 'post',
+            url: AppApi.openssl,
+            data: {
+                data: {
+                    public: public,
+                    private: private,
+                    padding: padding,
+                    data: data,
+                    type: "openssl",
+                    method: method,
+                },
+                type: "openssl",
+            },
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                logid: (new Date()).getTime(),
+            },
+        }
+        
+        curl(config, function ( dd ){
+            var content = dd.data;
+            console.log(content);
+            document.getElementsByName('content')[0].innerHTML = content;
+        });
+
+    }
+
+    // 发送 CURL 请求
+    function curl ( config , callback ) {
+        axios(config).then(callback).catch(function (error) {
+            console.log(error);
+        });
+    }
+
+</script>
+</html>
