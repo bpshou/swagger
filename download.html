@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>下载任务</title>
+    <link rel="stylesheet" href="./src/bootstrap/css/bootstrap.min.css">
+    <style>
+        textarea { min-height: 320px; }
+        pre { padding: 6px 12px; min-height:400px; }
+        .string { color: #92278f; }
+        .number { color: #25aae2; }
+        .boolean { color: #f0ad4e; }
+        .null { color: #d9534f; }
+        .key { color: #4cae4c; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        
+        <div class="col-md-12">
+            <h3>支持 抖音 哔哩哔哩 优酷 YouTube 爱奇艺 芒果TV 微博 斗鱼视频 Facebook 秒拍 腾讯视频 网易云音乐 好看视频 的资源下载</h3>
+            <hr>
+        </div>
+        <div class="col-md-12">
+            <form method="POST" enctype="multipart/form-data" onsubmit="return false;">
+                <!-- <div class="form-group">
+                    <label>文件路径</label>
+                    <input type="file" name="downloaddir" webkitdirectory class="form-control">
+                </div> -->
+                <div class="form-group">
+                    <label>资源连接</label>
+                    <textarea name="resource" class="form-control"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success" onclick="download()">添加异步下载任务</button>
+            </form>
+        </div>
+    </div>
+</div> 
+</body>
+<script src="./src/axios.min.js"></script>
+<script src="./src/config.js"></script>
+<script>
+
+    var AppApi = window.AppApi;
+    function download () {
+
+        var resource = document.getElementsByName('resource')[0].value;
+
+        var config = {
+            method: 'post',
+            url: AppApi.download,
+            data: {
+                resource: resource,
+            },
+            headers: window.AppHeader,
+        }
+
+        curl(config, function ( dd ){
+            var content = dd.data;
+            console.log(content);
+            alert(content.msg);
+            document.getElementsByName('resource')[0].value = '';
+        });
+
+    }
+
+    // 发送 CURL 请求
+    function curl ( config , callback ) {
+        axios(config).then(callback).catch(function (error) {
+            console.log(error);
+        });
+    }
+
+</script>
+</html>

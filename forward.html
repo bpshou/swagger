@@ -61,10 +61,7 @@
                 data: input,
                 type: type
             },
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                logid: (new Date()).getTime(),
-            },
+            headers: window.AppHeader,
         }
         
         curl(config, function ( dd ){
