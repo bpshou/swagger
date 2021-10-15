@@ -37,6 +37,10 @@
                 <button type="submit" class="btn btn-success" onclick="download()">添加异步下载任务</button>
             </form>
         </div>
+        <div class="col-md-12">
+            <h3>信息</h3>
+            <h4 class="message"></h4>
+        </div>
     </div>
 </div> 
 </body>
@@ -61,8 +65,12 @@
         curl(config, function ( dd ){
             var content = dd.data;
             console.log(content);
-            alert(content.msg);
+            document.getElementsByClassName('message')[0].innerHTML = content.msg;
             document.getElementsByName('resource')[0].value = '';
+            // 定时器取消消息
+            setTimeout(function () {
+                document.getElementsByClassName('message')[0].innerHTML = '';
+            }, 2000);
         });
 
     }
