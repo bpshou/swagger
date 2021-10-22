@@ -31,6 +31,10 @@
                     <input type="file" name="downloaddir" webkitdirectory class="form-control">
                 </div> -->
                 <div class="form-group">
+                    <label>文件路径</label>
+                    <input type="text" name="downloaddir" class="form-control">
+                </div>
+                <div class="form-group">
                     <label>资源连接</label>
                     <textarea name="resource" class="form-control"></textarea>
                 </div>
@@ -51,12 +55,14 @@
     var AppApi = window.AppApi;
     function download () {
 
+        var downloaddir = document.getElementsByName('downloaddir')[0].value;
         var resource = document.getElementsByName('resource')[0].value;
 
         var config = {
             method: 'post',
             url: AppApi.download,
             data: {
+                downloaddir: downloaddir,
                 resource: resource,
             },
             headers: window.AppHeader,
