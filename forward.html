@@ -61,7 +61,9 @@
                 data: input,
                 type: type
             },
-            headers: window.AppHeader,
+            withCredentials: true,
+            crossDomain: true,
+            // headers: window.AppHeader, // 跨域需要关掉自定义header
         }
         
         curl(config, function ( dd ){
