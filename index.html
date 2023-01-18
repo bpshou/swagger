@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>下载任务</title>
+    <link rel="stylesheet" href="./src/bootstrap/css/bootstrap.min.css">
+    <!-- <style>
+        textarea { min-height: 320px; }
+        pre { padding: 6px 12px; min-height:400px; }
+        .string { color: #92278f; }
+        .number { color: #25aae2; }
+        .boolean { color: #f0ad4e; }
+        .null { color: #d9534f; }
+        .key { color: #4cae4c; }
+    </style> -->
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h3>接口域名</h3>
+            <hr>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+            <form method="POST" enctype="multipart/form-data" onsubmit="return false;">
+                <div class="form-group">
+                    <label>接口域名</label>
+                    <input type="text" name="domain" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success" onclick="save()">保存</button>
+            </form>
+            <br>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="list-group">
+                <a href="./note.html" class="list-group-item list-group-item-success">笔记面板</a>
+                <a href="./forward.html" class="list-group-item list-group-item-info">数据解析</a>
+                <a href="#" class="list-group-item list-group-item-success">暂无</a>
+            </div>
+        </div>
+    </div>
+</div> 
+</body>
+<script src="./src/axios.min.js"></script>
+<script src="./src/config.js"></script>
+<script>
+
+    (function load() {
+        const api_domain = localStorage.getItem('api_domain');
+        if (api_domain) {
+            document.getElementsByName('domain')[0].value = api_domain;
+        }
+    })()
+
+    function save () {
+        var domain = document.getElementsByName('domain')[0].value;
+        localStorage.setItem('api_domain', domain);
+        alert('保存成功');
+    }
+
+</script>
+</html>

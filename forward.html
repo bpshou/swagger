@@ -20,6 +20,23 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
+            <div class="form-group">
+                <label for="exampleInputEmail1">JSON缩进</label>
+                <div class="form-group">
+                    <select name="padding" class="form-control">
+                        <option value="2">2个缩进</option>
+                        <option value="4">4个缩进</option>
+                        <option value="6">6个缩进</option>
+                        <option value="8">8个缩进</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-12">
+        </div>
+        <div class="col-md-6">
             <form method="POST" onsubmit="return false;">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Array | JSON | Urldecode</label>
@@ -54,9 +71,11 @@
     function parseData ( type ) {
         var input = document.getElementById('input').value;
 
+        const api_domain = localStorage.getItem('api_domain');
+
         var config = {
             method: 'post',
-            url: AppApi.forward,
+            url: api_domain + AppApi.forward,
             data: {
                 data: input,
                 type: type
